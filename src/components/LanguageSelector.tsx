@@ -5,7 +5,7 @@ interface LanguageSelectorProps {
   onLanguageChange: (language: string) => void;
 }
 
-const languages = ['English', 'Tamil', 'Hindi'];
+const languages = ['English', 'Tamil', 'Hindi', 'Telugu'];
 
 export function LanguageSelector({ selectedLanguage, onLanguageChange }: LanguageSelectorProps) {
   return (

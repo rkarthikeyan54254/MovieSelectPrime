@@ -115,7 +115,8 @@ function getLanguageCode(language: string): string {
   const languageCodes: Record<string, string> = {
     'English': 'en',
     'Hindi': 'hi',
-    'Tamil': 'ta'
+    'Tamil': 'ta',
+    'Telugu': 'te'
   };
   return languageCodes[language] || 'en';
 }

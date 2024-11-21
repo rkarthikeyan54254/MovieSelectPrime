@@ -75,7 +75,7 @@ export default function App() {
         </div>
         
         <p className="text-lg md:text-xl text-gray-300 mb-6 md:mb-8 max-w-2xl mx-auto px-4">
-          Discover your next favorite movie with AI-powered recommendations. No more endless scrolling – just click and enjoy!
+          (re)Discover your next favorite movie with us! No more endless scrolling – just click and enjoy!
         </p>
         
         <div className="flex flex-col items-center space-y-4 md:space-y-6 max-w-md mx-auto px-4">

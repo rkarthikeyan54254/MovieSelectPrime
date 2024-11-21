@@ -11,10 +11,3 @@ export interface Movie {
     flatrate?: Array<{ provider_id: number; provider_name: string }>;
   };
 }
-
-export interface TMDBResponse {
-  page: number;
-  results: Movie[];
-  total_pages: number;
-  total_results: number;
-}
