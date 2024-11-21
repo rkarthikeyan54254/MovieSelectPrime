@@ -13,18 +13,18 @@ const regions = [
 
 export function RegionSelector({ selectedRegion, onRegionChange }: RegionSelectorProps) {
   return (
-    <div className="flex flex-wrap justify-center gap-3">
+    <div className="flex flex-wrap justify-center gap-2 md:gap-3 w-full">
       {regions.map(({ code, name }) => (
         <button
           key={code}
           onClick={() => onRegionChange(code)}
-          className={`btn-region flex items-center gap-2 ${
+          className={`btn-region text-sm md:text-base flex items-center gap-1.5 md:gap-2 ${
             selectedRegion === code
               ? 'bg-gradient-to-r from-green-600 to-teal-600 text-white'
               : 'bg-gray-700 text-gray-300 hover:bg-gray-600'
           }`}
         >
-          <MapPin className="w-4 h-4" />
+          <MapPin className="w-3 h-3 md:w-4 md:h-4" />
           {name}
         </button>
       ))}

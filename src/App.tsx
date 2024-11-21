@@ -16,7 +16,7 @@ function shuffleArray<T>(array: T[]): T[] {
   return newArray;
 }
 
-function App() {
+export default function App() {
   const [selectedLanguage, setSelectedLanguage] = useState('English');
   const [selectedDecade, setSelectedDecade] = useState('Latest');
   const [selectedRegion, setSelectedRegion] = useState('IN');
@@ -66,19 +66,19 @@ function App() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 text-white py-8 px-4">
-      <header className="container mx-auto text-center mb-12">
-        <div className="flex items-center justify-center gap-4 mb-4">
-          <Film className="w-10 h-10 text-blue-400 transform -rotate-12" />
-          <h1 className="text-5xl font-bold text-gradient">Movie Select Prime</h1>
-          <Clapperboard className="w-10 h-10 text-purple-400 transform rotate-12" />
+    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 text-white py-4 md:py-8 px-3 md:px-4">
+      <header className="container mx-auto text-center mb-8 md:mb-12">
+        <div className="flex items-center justify-center gap-2 md:gap-4 mb-3 md:mb-4">
+          <Film className="w-8 h-8 md:w-10 md:h-10 text-blue-400 transform -rotate-12" />
+          <h1 className="text-3xl md:text-5xl font-bold text-gradient">Movie Select Prime</h1>
+          <Clapperboard className="w-8 h-8 md:w-10 md:h-10 text-purple-400 transform rotate-12" />
         </div>
         
-        <p className="text-xl text-gray-300 mb-8 max-w-2xl mx-auto">
+        <p className="text-lg md:text-xl text-gray-300 mb-6 md:mb-8 max-w-2xl mx-auto px-4">
           Discover your next favorite movie with AI-powered recommendations. No more endless scrolling – just click and enjoy!
         </p>
         
-        <div className="flex flex-col items-center space-y-6 max-w-md mx-auto">
+        <div className="flex flex-col items-center space-y-4 md:space-y-6 max-w-md mx-auto px-4">
           <RegionSelector
             selectedRegion={selectedRegion}
             onRegionChange={setSelectedRegion}
@@ -95,35 +95,33 @@ function App() {
           <button
             onClick={handleShuffle}
             disabled={isLoading || movies.length === 0}
-            className="btn-primary w-48"
+            className="btn-primary w-full md:w-48"
           >
-            <RefreshCw className={`w-5 h-5 ${isLoading ? 'animate-spin' : ''}`} />
+            <RefreshCw className={`w-4 h-4 md:w-5 md:h-5 ${isLoading ? 'animate-spin' : ''}`} />
             Shuffle Movie
           </button>
         </div>
       </header>
 
-      <main className="container mx-auto mt-8">
+      <main className="container mx-auto mt-6 md:mt-8 px-2 md:px-4">
         {isLoading ? (
-          <div className="text-center text-xl">Loading...</div>
+          <div className="text-center text-lg md:text-xl">Loading...</div>
         ) : currentMovie ? (
           <MovieCard movie={currentMovie} />
         ) : (
-          <div className="text-center text-xl">
+          <div className="text-center text-lg md:text-xl">
             No movies found for the selected criteria.
           </div>
         )}
       </main>
 
-      <footer className="container mx-auto mt-12 text-center text-gray-400 space-y-4">
-        <p>Data provided by TMDB. Available on Prime Video.</p>
-        <p className="text-sm">Movie Select Prime™ - All rights reserved © {new Date().getFullYear()}</p>
-        <p className="flex items-center justify-center gap-2">
-          Made with <Heart className="w-4 h-4 text-red-500 fill-current" /> and AI
+      <footer className="container mx-auto mt-8 md:mt-12 text-center text-gray-400 space-y-3 md:space-y-4 px-4">
+        <p className="text-sm md:text-base">Data provided by TMDB. Available on Prime Video.</p>
+        <p className="text-xs md:text-sm">Movie Select Prime™ - All rights reserved © {new Date().getFullYear()}</p>
+        <p className="flex items-center justify-center gap-2 text-sm">
+          Made with <Heart className="w-3 h-3 md:w-4 md:h-4 text-red-500 fill-current" /> and AI
         </p>
       </footer>
     </div>
   );
 }
-
-export default App;
