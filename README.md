@@ -1,5 +1,7 @@
 # Movie Select Prime 🎬
 
+![Website Link](https://movieselectprime.netlify.app/)
+
 ![Movie Select Prime](https://img.shields.io/badge/Movie%20Select-Prime-00A8E1)
 ![React](https://img.shields.io/badge/React-18-blue)
 ![TypeScript](https://img.shields.io/badge/TypeScript-5.0-blue)
