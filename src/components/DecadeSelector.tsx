@@ -17,7 +17,7 @@ export function DecadeSelector({ selectedDecade, onDecadeChange }: DecadeSelecto
           className={`btn-decade text-sm md:text-base ${
             selectedDecade === decade
               ? 'bg-gradient-to-r from-blue-600 to-purple-600 text-white'
-              : 'bg-gray-700 text-gray-300 hover:bg-gray-600'
+              : 'bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-300 dark:hover:bg-gray-600'
           }`}
         >
           {decade}

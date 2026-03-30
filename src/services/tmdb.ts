@@ -1,5 +1,5 @@
 import axios, { AxiosError } from 'axios';
-import type { Movie, TMDBResponse } from '../types/movie';
+import type { Movie, TMDBResponse, Genre } from '../types/movie';
 
 const TMDB_API_KEY = '800e51d97755c2994e7aba7143888ef0';
 const TMDB_BASE_URL = 'https://api.themoviedb.org/3';
@@ -16,42 +16,41 @@ function getDateRangeForDecade(decade: string): { start_date: string; end_date: 
 
   switch (decade) {
     case '70s':
-      return {
-        start_date: '1970-01-01',
-        end_date: '1979-12-31'
-      };
+      return { start_date: '1970-01-01', end_date: '1979-12-31' };
     case '80s':
-      return {
-        start_date: '1980-01-01',
-        end_date: '1989-12-31'
-      };
+      return { start_date: '1980-01-01', end_date: '1989-12-31' };
     case '90s':
-      return {
-        start_date: '1990-01-01',
-        end_date: '1999-12-31'
-      };
+      return { start_date: '1990-01-01', end_date: '1999-12-31' };
     case '2K':
-      return {
-        start_date: '2000-01-01',
-        end_date: '2009-12-31'
-      };
+      return { start_date: '2000-01-01', end_date: '2009-12-31' };
     case 'Latest':
       return {
         start_date: `${currentYear - 2}-${currentMonth.toString().padStart(2, '0')}-${currentDay.toString().padStart(2, '0')}`,
         end_date: `${currentYear}-${currentMonth.toString().padStart(2, '0')}-${currentDay.toString().padStart(2, '0')}`
       };
     default:
-      return {
-        start_date: '1970-01-01',
-        end_date: `${currentYear}-12-31`
-      };
+      return { start_date: '1970-01-01', end_date: `${currentYear}-12-31` };
+  }
+}
+
+export async function fetchGenres(): Promise<Genre[]> {
+  try {
+    const response = await axios.get(`${TMDB_BASE_URL}/genre/movie/list`, {
+      params: { api_key: TMDB_API_KEY }
+    });
+    return response.data.genres;
+  } catch (error) {
+    console.error('Failed to fetch genres', error);
+    return [];
   }
 }
 
 export async function fetchMoviesByLanguage(
   language: string,
   decade: string = 'Latest',
-  region: string = 'IN'
+  region: string = 'IN',
+  sortBy: string = 'popularity.desc',
+  withGenre?: number
 ): Promise<Movie[]> {
   try {
     const languageCode = getLanguageCode(language);
@@ -66,7 +65,8 @@ export async function fetchMoviesByLanguage(
         with_original_language: languageCode,
         'primary_release_date.gte': start_date,
         'primary_release_date.lte': end_date,
-        sort_by: 'popularity.desc',
+        sort_by: sortBy,
+        with_genres: withGenre,
         page: 1,
       },
     });
@@ -91,6 +91,38 @@ export async function fetchMoviesByLanguage(
   }
 }
 
+export async function fetchMovieDetails(movieId: number, region: string = 'IN'): Promise<Movie | null> {
+  try {
+    const response = await axios.get<Movie>(`${TMDB_BASE_URL}/movie/${movieId}`, {
+      params: {
+        api_key: TMDB_API_KEY,
+        append_to_response: 'credits,videos'
+      }
+    });
+    const watchProviders = await fetchWatchProviders(movieId, region);
+    return { ...response.data, watch_providers: watchProviders };
+  } catch (error) {
+    console.error('Failed to fetch movie details', error);
+    return null;
+  }
+}
+
+export async function searchMovies(query: string, region: string = 'IN'): Promise<Movie[]> {
+  try {
+    const response = await axios.get<TMDBResponse>(`${TMDB_BASE_URL}/search/movie`, {
+      params: {
+        api_key: TMDB_API_KEY,
+        query,
+        region
+      }
+    });
+    return response.data.results;
+  } catch (error) {
+    console.error('Search failed', error);
+    return [];
+  }
+}
+
 async function fetchWatchProviders(movieId: number, region: string) {
   try {
     const response = await axios.get(
@@ -103,10 +135,7 @@ async function fetchWatchProviders(movieId: number, region: string) {
     );
     return response.data.results[region];
   } catch (error) {
-    const errorMessage = error instanceof AxiosError 
-      ? `Failed to fetch watch providers: ${error.message}`
-      : 'An unexpected error occurred while fetching watch providers';
-    console.error(errorMessage);
+    console.error('Failed to fetch watch providers', error);
     return null;
   }
 }

@@ -2,9 +2,31 @@
 @tailwind components;
 @tailwind utilities;
 
+:root {
+  --bg-primary: #ffffff;
+  --bg-secondary: #f3f4f6;
+  --text-primary: #111827;
+  --text-secondary: #4b5563;
+  --card-bg: rgba(255, 255, 255, 0.8);
+  --accent-purple: #9333ea;
+  --accent-blue: #2563eb;
+}
+
+.dark {
+  --bg-primary: #111827;
+  --bg-secondary: #1f2937;
+  --text-primary: #f9fafb;
+  --text-secondary: #d1d5db;
+  --card-bg: rgba(31, 41, 55, 0.5);
+  --accent-purple: #a855f7;
+  --accent-blue: #3b82f6;
+}
+
 @layer base {
   body {
-    @apply antialiased bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 min-h-screen;
+    @apply antialiased transition-colors duration-300;
+    background-color: var(--bg-primary);
+    color: var(--text-primary);
   }
 }
 
@@ -15,16 +37,8 @@
            disabled:opacity-50 disabled:cursor-not-allowed shadow-lg hover:shadow-xl;
   }
 
-  .btn-language {
-    @apply px-6 py-2 rounded-lg font-medium transition-all duration-300 shadow-md hover:shadow-lg;
-  }
-
-  .btn-decade {
-    @apply px-4 py-2 rounded-lg font-medium transition-all duration-300 shadow-md hover:shadow-lg;
-  }
-
-  .btn-region {
-    @apply px-6 py-2 rounded-lg font-medium transition-all duration-300 shadow-md hover:shadow-lg;
+  .btn-language, .btn-decade, .btn-region {
+    @apply px-4 md:px-6 py-2 rounded-lg font-medium transition-all duration-300 shadow-md hover:shadow-lg;
   }
 }
 
@@ -34,6 +48,10 @@
   }
   
   .text-gradient {
-    @apply bg-clip-text text-transparent bg-gradient-to-r from-purple-400 to-blue-400;
+    @apply bg-clip-text text-transparent bg-gradient-to-r from-purple-500 to-blue-500 dark:from-purple-400 dark:to-blue-400;
+  }
+
+  .bg-primary-gradient {
+    @apply bg-gradient-to-br from-gray-50 via-white to-gray-100 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900;
   }
 }

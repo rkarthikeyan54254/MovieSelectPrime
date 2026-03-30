@@ -17,7 +17,7 @@ export function LanguageSelector({ selectedLanguage, onLanguageChange }: Languag
           className={`btn-language text-sm md:text-base ${
             selectedLanguage === language
               ? 'bg-gradient-to-r from-purple-600 to-blue-600 text-white'
-              : 'bg-gray-700 text-gray-300 hover:bg-gray-600'
+              : 'bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-300 dark:hover:bg-gray-600'
           }`}
         >
           {language}
