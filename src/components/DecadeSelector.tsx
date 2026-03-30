@@ -9,15 +9,15 @@ const decades = ['70s', '80s', '90s', '2K', 'Latest'];
 
 export function DecadeSelector({ selectedDecade, onDecadeChange }: DecadeSelectorProps) {
   return (
-    <div className="flex flex-wrap justify-center gap-2 md:gap-3 w-full">
+    <div className="flex flex-wrap gap-2">
       {decades.map((decade) => (
         <button
           key={decade}
           onClick={() => onDecadeChange(decade)}
-          className={`btn-decade text-sm md:text-base ${
+          className={`px-6 py-2 rounded-full text-xs font-black uppercase tracking-widest transition-all duration-300 ${
             selectedDecade === decade
-              ? 'bg-gradient-to-r from-blue-600 to-purple-600 text-white'
-              : 'bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-300 dark:hover:bg-gray-600'
+              ? 'bg-white text-black shadow-lg shadow-white/10'
+              : 'chic-glass text-text-secondary hover:bg-white/5'
           }`}
         >
           {decade}

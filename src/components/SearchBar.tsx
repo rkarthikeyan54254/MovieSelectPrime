@@ -22,23 +22,23 @@ export function SearchBar({ onSearch, onClear }: SearchBarProps) {
   };
 
   return (
-    <form onSubmit={handleSubmit} className="relative w-full max-w-md mx-auto">
-      <div className="relative">
+    <form onSubmit={handleSubmit} className="relative w-full">
+      <div className="relative group">
         <input
           type="text"
           value={query}
           onChange={(e) => setQuery(e.target.value)}
-          placeholder="Search movies..."
-          className="w-full pl-12 pr-10 py-3 bg-gray-100 dark:bg-gray-800 border-2 border-transparent focus:border-purple-500 rounded-xl outline-none transition-all duration-300 text-primary"
+          placeholder="SEARCH CINEMA..."
+          className="chic-input pl-14 pr-12 text-sm font-black tracking-widest uppercase placeholder:text-text-secondary/30 transition-all duration-500 group-hover:bg-white/5"
         />
-        <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
+        <Search className="absolute left-6 top-1/2 -translate-y-1/2 w-5 h-5 text-text-secondary/50 group-focus-within:text-purple-500 transition-colors" />
         {query && (
           <button
             type="button"
             onClick={handleClear}
-            className="absolute right-4 top-1/2 -translate-y-1/2 p-1 hover:bg-gray-200 dark:hover:bg-gray-700 rounded-full transition-colors"
+            className="absolute right-4 top-1/2 -translate-y-1/2 p-2 hover:bg-white/10 rounded-full transition-colors"
           >
-            <X className="w-4 h-4 text-gray-400" />
+            <X className="w-4 h-4 text-text-secondary" />
           </button>
         )}
       </div>

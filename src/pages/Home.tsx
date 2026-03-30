@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { Clapperboard, Film, RefreshCw } from 'lucide-react';
+import { RefreshCw, Filter, Settings2 } from 'lucide-react';
 import { LanguageSelector } from '../components/LanguageSelector';
 import { DecadeSelector } from '../components/DecadeSelector';
 import { RegionSelector } from '../components/RegionSelector';
@@ -27,6 +27,7 @@ export function Home() {
   const [selectedGenre, setSelectedGenre] = useState<number | undefined>(undefined);
   const [selectedSort, setSelectedSort] = useState('popularity.desc');
   const [searchQuery, setSearchQuery] = useState('');
+  const [showFilters, setShowFilters] = useState(false);
   
   const [currentMovie, setCurrentMovie] = useState<Movie | null>(null);
   const [movies, setMovies] = useState<Movie[]>([]);
@@ -90,85 +91,88 @@ export function Home() {
     }
   };
 
-  const handleSearch = (query: string) => {
-    setSearchQuery(query);
-  };
-
-  const handleClearSearch = () => {
-    setSearchQuery('');
-  };
-
   return (
-    <div className="space-y-8 md:space-y-12">
-      <header className="text-center space-y-6 md:space-y-8">
-        <div className="flex items-center justify-center gap-2 md:gap-4 mb-3 md:mb-4">
-          <Film className="w-8 h-8 md:w-10 md:h-10 text-blue-500 transform -rotate-12" />
-          <h1 className="text-3xl md:text-5xl font-bold text-gradient">Movie Select Prime</h1>
-          <Clapperboard className="w-8 h-8 md:w-10 md:h-10 text-purple-500 transform rotate-12" />
+    <div className="space-y-12 md:space-y-20 animate-fade-in">
+      <header className="max-w-5xl mx-auto text-center space-y-8 md:space-y-12">
+        <div className="space-y-4">
+          <h1 className="text-5xl md:text-8xl font-black tracking-tighter leading-none">
+            PICK YOUR <br />
+            <span className="text-gradient-chic italic">CINEMA.</span>
+          </h1>
+          <p className="text-lg md:text-xl text-text-secondary max-w-xl mx-auto font-medium">
+            (re)Discover high-fidelity cinema curated for your mood.
+          </p>
         </div>
-        
-        <p className="text-lg md:text-xl text-secondary max-w-2xl mx-auto px-4">
-          (re)Discover your next favorite movie with us! No more endless scrolling – just click and enjoy!
-        </p>
 
-        <SearchBar onSearch={handleSearch} onClear={handleClearSearch} />
-        
-        {!searchQuery && (
-          <div className="flex flex-col items-center space-y-6 w-full max-w-4xl mx-auto px-4">
-            <div className="space-y-4 w-full">
-              <h3 className="text-sm font-semibold uppercase tracking-wider text-gray-500">Region</h3>
-              <RegionSelector selectedRegion={selectedRegion} onRegionChange={setSelectedRegion} />
-            </div>
-            
-            <div className="space-y-4 w-full">
-              <h3 className="text-sm font-semibold uppercase tracking-wider text-gray-500">Language</h3>
-              <LanguageSelector selectedLanguage={selectedLanguage} onLanguageChange={setSelectedLanguage} />
-            </div>
+        <div className="flex flex-col md:flex-row items-center gap-4 justify-center">
+          <div className="w-full md:max-w-md">
+            <SearchBar onSearch={setSearchQuery} onClear={() => setSearchQuery('')} />
+          </div>
+          <button 
+            onClick={() => setShowFilters(!showFilters)}
+            className={`chic-btn-secondary flex items-center gap-2 ${showFilters ? 'bg-purple-500/20' : ''}`}
+          >
+            <Settings2 className="w-5 h-5" />
+            Preferences
+          </button>
+        </div>
 
-            <div className="space-y-4 w-full">
-              <h3 className="text-sm font-semibold uppercase tracking-wider text-gray-500">Decade</h3>
-              <DecadeSelector selectedDecade={selectedDecade} onDecadeChange={setSelectedDecade} />
-            </div>
-
-            <div className="space-y-4 w-full">
-              <h3 className="text-sm font-semibold uppercase tracking-wider text-gray-500">Genre</h3>
-              <GenreSelector selectedGenre={selectedGenre} onGenreChange={setSelectedGenre} />
+        {showFilters && !searchQuery && (
+          <div className="chic-glass rounded-[2rem] p-8 md:p-12 space-y-10 text-left animate-scale-in">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
+              <div className="space-y-4">
+                <label className="text-xs font-black uppercase tracking-widest text-text-secondary">Region</label>
+                <RegionSelector selectedRegion={selectedRegion} onRegionChange={setSelectedRegion} />
+              </div>
+              <div className="space-y-4">
+                <label className="text-xs font-black uppercase tracking-widest text-text-secondary">Language</label>
+                <LanguageSelector selectedLanguage={selectedLanguage} onLanguageChange={setSelectedLanguage} />
+              </div>
             </div>
 
-            <div className="space-y-4 w-full">
-              <h3 className="text-sm font-semibold uppercase tracking-wider text-gray-500">Sort By</h3>
-              <SortSelector selectedSort={selectedSort} onSortChange={setSelectedSort} />
+            <div className="space-y-6">
+              <div className="space-y-4">
+                <label className="text-xs font-black uppercase tracking-widest text-text-secondary">Decade</label>
+                <DecadeSelector selectedDecade={selectedDecade} onDecadeChange={setSelectedDecade} />
+              </div>
+              <div className="space-y-4">
+                <label className="text-xs font-black uppercase tracking-widest text-text-secondary">Genre</label>
+                <GenreSelector selectedGenre={selectedGenre} onGenreChange={setSelectedGenre} />
+              </div>
+              <div className="space-y-4">
+                <label className="text-xs font-black uppercase tracking-widest text-text-secondary">Sort By</label>
+                <SortSelector selectedSort={selectedSort} onSortChange={setSelectedSort} />
+              </div>
             </div>
           </div>
         )}
         
-        <div className="flex justify-center">
+        <div className="flex justify-center pt-4">
           <button
             onClick={handleShuffle}
             disabled={isLoading || movies.length === 0}
-            className="btn-primary w-full md:w-64"
+            className="chic-btn-primary px-12 py-5 text-xl flex items-center gap-3 animate-breath group"
           >
-            <RefreshCw className={`w-4 h-4 md:w-5 md:h-5 ${isLoading ? 'animate-spin' : ''}`} />
-            {isLoading ? 'Fetching Movies...' : 'Shuffle Movie'}
+            <RefreshCw className={`w-6 h-6 group-hover:rotate-180 transition-transform duration-500 ${isLoading ? 'animate-spin' : ''}`} />
+            {isLoading ? 'Scanning...' : 'Shuffle Choice'}
           </button>
         </div>
       </header>
 
-      <main className="px-2 md:px-4">
+      <main className="max-w-6xl mx-auto pb-20">
         {isLoading ? (
-          <div className="space-y-4">
-            <div className="flex flex-col items-center justify-center py-8 space-y-4">
-              <RefreshCw className="w-8 h-8 text-purple-500 animate-spin" />
-              <p className="text-lg font-medium text-secondary">Finding great movies for you...</p>
-            </div>
+          <div className="space-y-8">
             <SkeletonCard />
           </div>
         ) : currentMovie ? (
-          <MovieCard movie={currentMovie} />
+          <div className="spotlight-reveal">
+            <MovieCard movie={currentMovie} />
+          </div>
         ) : (
-          <div className="text-center py-20 bg-gray-100 dark:bg-gray-800 rounded-2xl border-2 border-dashed border-gray-300 dark:border-gray-700">
-            <p className="text-lg md:text-xl text-secondary">
-              No movies found for the selected criteria. Try changing your filters!
+          <div className="chic-glass rounded-[3rem] py-32 text-center border-dashed">
+            <p className="text-xl md:text-2xl font-bold text-text-secondary">
+              The screen is dark. <br />
+              <span className="text-sm font-normal">Try adjusting your preferences to find a match.</span>
             </p>
           </div>
         )}

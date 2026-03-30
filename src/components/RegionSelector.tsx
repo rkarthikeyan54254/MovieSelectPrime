@@ -7,20 +7,20 @@ interface RegionSelectorProps {
 
 const regions = [
   { code: 'IN', name: 'India' },
-  { code: 'US', name: 'United States' }
+  { code: 'US', name: 'USA' }
 ];
 
 export function RegionSelector({ selectedRegion, onRegionChange }: RegionSelectorProps) {
   return (
-    <div className="flex flex-wrap justify-center gap-2 md:gap-3 w-full">
+    <div className="flex flex-wrap gap-2">
       {regions.map((region) => (
         <button
           key={region.code}
           onClick={() => onRegionChange(region.code)}
-          className={`btn-region text-sm md:text-base ${
+          className={`px-6 py-2 rounded-full text-xs font-black uppercase tracking-widest transition-all duration-300 ${
             selectedRegion === region.code
-              ? 'bg-gradient-to-r from-blue-600 to-purple-600 text-white'
-              : 'bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-300 dark:hover:bg-gray-600'
+              ? 'bg-white text-black shadow-lg shadow-white/10'
+              : 'chic-glass text-text-secondary hover:bg-white/5'
           }`}
         >
           {region.name}

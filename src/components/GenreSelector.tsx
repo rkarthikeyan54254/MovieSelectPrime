@@ -19,25 +19,25 @@ export function GenreSelector({ selectedGenre, onGenreChange }: GenreSelectorPro
   }, []);
 
   return (
-    <div className="flex flex-wrap justify-center gap-2 md:gap-3 w-full">
+    <div className="flex flex-wrap gap-2">
       <button
         onClick={() => onGenreChange(undefined)}
-        className={`px-4 py-2 rounded-lg font-medium transition-all duration-300 shadow-md hover:shadow-lg text-sm md:text-base ${
+        className={`px-6 py-2 rounded-full text-xs font-black uppercase tracking-widest transition-all duration-300 ${
           selectedGenre === undefined
-            ? 'bg-gradient-to-r from-blue-600 to-purple-600 text-white'
-            : 'bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-300 dark:hover:bg-gray-600'
+            ? 'bg-white text-black'
+            : 'chic-glass text-text-secondary'
         }`}
       >
-        All Genres
+        All
       </button>
       {genres.map((genre) => (
         <button
           key={genre.id}
           onClick={() => onGenreChange(genre.id)}
-          className={`px-4 py-2 rounded-lg font-medium transition-all duration-300 shadow-md hover:shadow-lg text-sm md:text-base ${
+          className={`px-6 py-2 rounded-full text-xs font-black uppercase tracking-widest transition-all duration-300 ${
             selectedGenre === genre.id
-              ? 'bg-gradient-to-r from-blue-600 to-purple-600 text-white'
-              : 'bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-300 dark:hover:bg-gray-600'
+              ? 'bg-white text-black shadow-lg shadow-white/10'
+              : 'chic-glass text-text-secondary hover:bg-white/5'
           }`}
         >
           {genre.name}

@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { 
   ArrowLeft, Star, Calendar, Clock, 
-  ExternalLink, Play, Users, Film 
+  ExternalLink, Play, Users, Film, Info
 } from 'lucide-react';
 import { fetchMovieDetails } from '../services/tmdb';
 import { VideoPlayer } from '../components/VideoPlayer';
@@ -28,18 +28,18 @@ export function MovieDetail() {
 
   if (isLoading) {
     return (
-      <div className="flex flex-col items-center justify-center min-h-[60vh] space-y-4">
-        <div className="w-12 h-12 border-4 border-purple-500 border-t-transparent rounded-full animate-spin" />
-        <p className="text-lg font-medium text-secondary">Loading movie details...</p>
+      <div className="flex flex-col items-center justify-center min-h-[70vh] space-y-8 animate-fade-in">
+        <div className="w-16 h-16 border-4 border-purple-500 border-t-transparent rounded-full animate-spin shadow-2xl shadow-purple-500/20" />
+        <p className="text-xl font-bold tracking-tighter uppercase opacity-50">Curating Exhibit...</p>
       </div>
     );
   }
 
   if (!movie) {
     return (
-      <div className="text-center py-20">
-        <h2 className="text-2xl font-bold mb-4">Movie not found</h2>
-        <Link to="/" className="text-purple-500 hover:underline">Back to Home</Link>
+      <div className="text-center py-32 chic-glass rounded-[3rem] max-w-2xl mx-auto">
+        <h2 className="text-3xl font-black mb-6">COLLECTION ERROR.</h2>
+        <Link to="/" className="chic-btn-primary px-8">Return Home</Link>
       </div>
     );
   }
@@ -49,50 +49,50 @@ export function MovieDetail() {
   );
 
   const backdropUrl = `https://image.tmdb.org/t/p/original${movie.backdrop_path}`;
-  const posterUrl = `https://image.tmdb.org/t/p/w500${movie.poster_path}`;
+  const posterUrl = `https://image.tmdb.org/t/p/original${movie.poster_path}`;
 
   return (
-    <div className="space-y-8 md:space-y-12">
-      <Link to="/" className="inline-flex items-center gap-2 text-purple-500 hover:text-purple-600 font-semibold transition-colors">
+    <div className="space-y-12 md:space-y-20 animate-fade-in pb-20">
+      <Link to="/" className="chic-btn-secondary inline-flex items-center gap-3">
         <ArrowLeft className="w-5 h-5" />
-        Back to Selection
+        Back to Exhibit
       </Link>
 
-      <div className="relative rounded-3xl overflow-hidden shadow-2xl bg-gray-900 aspect-[21/9] hidden md:block">
-        <img src={backdropUrl} alt="" className="w-full h-full object-cover opacity-50" />
-        <div className="absolute inset-0 bg-gradient-to-t from-gray-900 via-transparent to-transparent" />
+      <div className="relative rounded-[3rem] overflow-hidden shadow-2xl bg-chic-gray aspect-[21/9] hidden md:block">
+        <img src={backdropUrl} alt="" className="w-full h-full object-cover opacity-60 scale-105" />
+        <div className="absolute inset-0 bg-gradient-to-t from-bg-primary via-bg-primary/20 to-transparent" />
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 lg:gap-12 relative md:-mt-32">
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-20 relative md:-mt-40 px-4 md:px-0">
         {/* Left Column: Poster & Quick Info */}
-        <div className="space-y-6">
-          <div className="rounded-2xl overflow-hidden shadow-2xl border-4 border-white dark:border-gray-800">
+        <div className="lg:col-span-4 space-y-10">
+          <div className="rounded-[2.5rem] overflow-hidden shadow-2xl chic-glass border-0">
             <img src={posterUrl} alt={movie.title} className="w-full h-auto" />
           </div>
           
-          <div className="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-xl space-y-6">
-            <div className="space-y-4">
-              <h3 className="text-lg font-bold flex items-center gap-2 text-primary">
-                <Film className="w-5 h-5 text-purple-500" />
-                Details
+          <div className="chic-glass rounded-[2rem] p-8 space-y-8">
+            <div className="space-y-6">
+              <h3 className="text-sm font-black uppercase tracking-widest text-text-secondary flex items-center gap-3">
+                <Info className="w-5 h-5" />
+                Metadata
               </h3>
-              <div className="grid grid-cols-2 gap-4 text-sm">
+              <div className="grid grid-cols-2 gap-8 text-sm">
                 <div className="space-y-1">
-                  <p className="text-gray-500">Status</p>
-                  <p className="font-semibold">Released</p>
+                  <p className="text-text-secondary font-bold uppercase tracking-tighter">Status</p>
+                  <p className="font-black text-lg">Released</p>
                 </div>
                 <div className="space-y-1">
-                  <p className="text-gray-500">Language</p>
-                  <p className="font-semibold uppercase">{movie.original_language}</p>
+                  <p className="text-text-secondary font-bold uppercase tracking-tighter">Language</p>
+                  <p className="font-black text-lg uppercase">{movie.original_language}</p>
                 </div>
                 <div className="space-y-1">
-                  <p className="text-gray-500">Runtime</p>
-                  <p className="font-semibold">{movie.runtime} mins</p>
+                  <p className="text-text-secondary font-bold uppercase tracking-tighter">Runtime</p>
+                  <p className="font-black text-lg">{movie.runtime} min</p>
                 </div>
                 <div className="space-y-1">
-                  <p className="text-gray-500">Rating</p>
-                  <div className="flex items-center gap-1 font-semibold">
-                    <Star className="w-4 h-4 text-yellow-500" fill="currentColor" />
+                  <p className="text-text-secondary font-bold uppercase tracking-tighter">Rating</p>
+                  <div className="flex items-center gap-2 font-black text-lg">
+                    <Star className="w-5 h-5 text-yellow-500 fill-current" />
                     {Math.round(movie.vote_average * 10) / 10}
                   </div>
                 </div>
@@ -100,19 +100,19 @@ export function MovieDetail() {
             </div>
 
             {movie.watch_providers && (
-              <div className="space-y-4 pt-4 border-t dark:border-gray-700">
-                <h3 className="text-lg font-bold flex items-center gap-2 text-primary">
-                  <Play className="w-5 h-5 text-blue-500" />
-                  Where to Watch
+              <div className="space-y-6 pt-8 border-t border-glass-border">
+                <h3 className="text-sm font-black uppercase tracking-widest text-text-secondary flex items-center gap-3">
+                  <Play className="w-5 h-5" />
+                  Streaming Hub
                 </h3>
-                <div className="flex flex-wrap gap-3">
+                <div className="flex flex-wrap gap-4">
                   {movie.watch_providers.flatrate?.map(provider => (
                     <img 
                       key={provider.provider_id}
                       src={`https://image.tmdb.org/t/p/original${provider.logo_path}`}
                       alt={provider.provider_name}
                       title={provider.provider_name}
-                      className="w-10 h-10 rounded-lg shadow-sm"
+                      className="w-12 h-12 rounded-2xl shadow-xl grayscale hover:grayscale-0 transition-all duration-500"
                     />
                   ))}
                 </div>
@@ -120,9 +120,9 @@ export function MovieDetail() {
                   href={movie.watch_providers.link}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="flex items-center justify-center gap-2 w-full py-3 bg-[#00A8E1] hover:bg-[#0096C8] text-white rounded-xl font-bold transition-all text-sm"
+                  className="chic-btn-primary w-full flex justify-center items-center gap-3 text-sm py-4"
                 >
-                  Stream Now <ExternalLink className="w-4 h-4" />
+                  Go Direct <ExternalLink className="w-4 h-4" />
                 </a>
               </div>
             )}
@@ -130,28 +130,28 @@ export function MovieDetail() {
         </div>
 
         {/* Right Column: Main Info & Trailer */}
-        <div className="lg:col-span-2 space-y-8 md:space-y-12">
-          <div className="space-y-4">
+        <div className="lg:col-span-8 space-y-12 lg:space-y-20">
+          <div className="space-y-6">
             {movie.tagline && (
-              <p className="text-purple-500 font-bold uppercase tracking-widest text-sm">
+              <p className="text-purple-500 font-black uppercase tracking-[0.3em] text-xs">
                 {movie.tagline}
               </p>
             )}
-            <h1 className="text-4xl md:text-6xl font-black text-primary leading-tight">
+            <h1 className="text-6xl md:text-9xl font-black leading-[0.85] tracking-tighter text-text-primary">
               {movie.title}
             </h1>
-            <div className="flex flex-wrap items-center gap-4 text-secondary">
-              <span className="flex items-center gap-1.5 font-semibold">
+            <div className="flex flex-wrap items-center gap-6 text-text-secondary font-bold">
+              <span className="flex items-center gap-2 uppercase tracking-tighter">
                 <Calendar className="w-5 h-5" />
                 {new Date(movie.release_date).getFullYear()}
               </span>
-              <span className="flex items-center gap-1.5 font-semibold">
+              <span className="flex items-center gap-2 uppercase tracking-tighter">
                 <Clock className="w-5 h-5" />
                 {movie.runtime} min
               </span>
-              <div className="flex gap-2">
+              <div className="flex gap-3">
                 {movie.genres?.map(genre => (
-                  <span key={genre.id} className="px-3 py-1 bg-gray-200 dark:bg-gray-700 rounded-full text-xs font-bold">
+                  <span key={genre.id} className="chic-glass px-4 py-2 rounded-full text-[10px] font-black uppercase tracking-widest">
                     {genre.name}
                   </span>
                 ))}
@@ -159,45 +159,46 @@ export function MovieDetail() {
             </div>
           </div>
 
-          <div className="space-y-6">
-            <h3 className="text-2xl font-bold text-primary">Overview</h3>
-            <p className="text-lg md:text-xl leading-relaxed text-secondary">
+          <div className="space-y-8">
+            <h3 className="text-3xl font-black tracking-tighter">OVERVIEW.</h3>
+            <p className="text-2xl lg:text-3xl leading-relaxed text-text-secondary font-medium">
               {movie.overview}
             </p>
           </div>
 
           {trailer && (
-            <div className="space-y-6">
-              <h3 className="text-2xl font-bold text-primary">Trailer</h3>
-              <VideoPlayer videoKey={trailer.key} />
+            <div className="space-y-10">
+              <h3 className="text-3xl font-black tracking-tighter">THE PREVIEW.</h3>
+              <div className="rounded-[3rem] overflow-hidden shadow-2xl border border-glass-border">
+                <VideoPlayer videoKey={trailer.key} />
+              </div>
             </div>
           )}
 
           {movie.credits && (
-            <div className="space-y-6">
-              <h3 className="text-2xl font-bold flex items-center gap-2 text-primary">
-                <Users className="w-6 h-6 text-purple-500" />
-                Top Cast
+            <div className="space-y-10">
+              <h3 className="text-3xl font-black tracking-tighter flex items-center gap-4">
+                CAST EXHIBIT.
               </h3>
-              <div className="flex overflow-x-auto pb-4 gap-4 scrollbar-hide">
-                {movie.credits.cast.slice(0, 10).map(person => (
-                  <div key={person.id} className="flex-shrink-0 w-32 space-y-3">
-                    <div className="aspect-[2/3] rounded-xl overflow-hidden shadow-md bg-gray-100 dark:bg-gray-800">
+              <div className="flex overflow-x-auto pb-10 gap-8 scrollbar-hide -mx-4 px-4 md:mx-0 md:px-0">
+                {movie.credits.cast.slice(0, 8).map(person => (
+                  <div key={person.id} className="flex-shrink-0 w-40 space-y-4 group">
+                    <div className="aspect-[4/5] rounded-[2rem] overflow-hidden shadow-xl bg-chic-gray chic-glass">
                       {person.profile_path ? (
                         <img 
                           src={`https://image.tmdb.org/t/p/w185${person.profile_path}`} 
                           alt={person.name}
-                          className="w-full h-full object-cover"
+                          className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
                         />
                       ) : (
-                        <div className="w-full h-full flex items-center justify-center text-gray-400">
-                          <Users className="w-8 h-8" />
+                        <div className="w-full h-full flex items-center justify-center text-gray-700">
+                          <Users className="w-10 h-10" />
                         </div>
                       )}
                     </div>
-                    <div className="text-center">
-                      <p className="text-sm font-bold line-clamp-1">{person.name}</p>
-                      <p className="text-xs text-gray-500 line-clamp-1">{person.character}</p>
+                    <div className="space-y-1">
+                      <p className="text-base font-black tracking-tighter line-clamp-1">{person.name}</p>
+                      <p className="text-xs text-text-secondary font-bold uppercase tracking-widest line-clamp-1">{person.character}</p>
                     </div>
                   </div>
                 ))}
