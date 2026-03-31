@@ -8,18 +8,11 @@ export const PROVIDERS = {
   'IN': [
     { id: 8, name: 'Netflix', color: '#E50914' },
     { id: 119, name: 'Amazon Prime', color: '#00A8E1' },
-    { id: 122, name: 'Disney+ Hotstar', color: '#006E99' },
-    { id: 232, name: 'Zee5', color: '#8230C6' },
-    { id: 220, name: 'JioCinema', color: '#D1107A' },
-    { id: 2, name: 'Apple TV', color: '#000000' }
+    { id: 232, name: 'Zee5', color: '#8230C6' }
   ],
   'US': [
     { id: 8, name: 'Netflix', color: '#E50914' },
-    { id: 9, name: 'Amazon Prime', color: '#00A8E1' },
-    { id: 337, name: 'Disney+', color: '#006E99' },
-    { id: 15, name: 'Hulu', color: '#1CE783' },
-    { id: 1899, name: 'Max', color: '#002BE7' },
-    { id: 2, name: 'Apple TV', color: '#000000' }
+    { id: 9, name: 'Amazon Prime', color: '#00A8E1' }
   ]
 };
 
@@ -65,7 +58,7 @@ export async function fetchMoviesByLanguage(
   region: string = 'IN',
   sortBy: string = 'popularity.desc',
   withGenre?: number,
-  providerIds: number[] = [119] // Default to Prime Video India
+  providerIds: number[] = [8, 119, 232] // Default to all selected for IN
 ): Promise<Movie[]> {
   try {
     const languageCode = getLanguageCode(language);
@@ -176,13 +169,7 @@ export function getDirectStreamingLink(title: string, providerId: number, region
     8: `https://www.netflix.com/search?q=${encodedTitle}`, // Netflix
     119: `https://www.primevideo.com/search/?phrase=${encodedTitle}`, // Prime Video IN
     9: `https://www.amazon.com/s?k=${encodedTitle}+prime+video`, // Prime Video US
-    122: `https://www.hotstar.com/in/explore?search_query=${encodedTitle}`, // Disney+ Hotstar
-    337: `https://www.disneyplus.com/search?q=${encodedTitle}`, // Disney+ US
-    232: `https://www.zee5.com/search?q=${encodedTitle}`, // Zee5
-    220: `https://www.jiocinema.com/search/${encodedTitle}`, // JioCinema
-    15: `https://www.hulu.com/search?q=${encodedTitle}`, // Hulu
-    1899: `https://www.max.com/search/${encodedTitle}`, // Max
-    2: `https://tv.apple.com/search?term=${encodedTitle}`, // Apple TV
+    232: `https://www.zee5.com/search?q=${encodedTitle}` // Zee5
   };
 
   return searchUrls[providerId] || `https://www.google.com/search?q=${encodedTitle}+watch+online`;
