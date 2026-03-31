@@ -4,9 +4,23 @@ import type { Movie, TMDBResponse, Genre } from '../types/movie';
 const TMDB_API_KEY = '800e51d97755c2994e7aba7143888ef0';
 const TMDB_BASE_URL = 'https://api.themoviedb.org/3';
 
-const PROVIDER_IDS = {
-  'IN': 119, // Prime Video India
-  'US': 9    // Prime Video US
+export const PROVIDERS = {
+  'IN': [
+    { id: 8, name: 'Netflix', color: '#E50914' },
+    { id: 119, name: 'Amazon Prime', color: '#00A8E1' },
+    { id: 122, name: 'Disney+ Hotstar', color: '#006E99' },
+    { id: 232, name: 'Zee5', color: '#8230C6' },
+    { id: 220, name: 'JioCinema', color: '#D1107A' },
+    { id: 2, name: 'Apple TV', color: '#000000' }
+  ],
+  'US': [
+    { id: 8, name: 'Netflix', color: '#E50914' },
+    { id: 9, name: 'Amazon Prime', color: '#00A8E1' },
+    { id: 337, name: 'Disney+', color: '#006E99' },
+    { id: 15, name: 'Hulu', color: '#1CE783' },
+    { id: 1899, name: 'Max', color: '#002BE7' },
+    { id: 2, name: 'Apple TV', color: '#000000' }
+  ]
 };
 
 function getDateRangeForDecade(decade: string): { start_date: string; end_date: string } {
@@ -50,17 +64,18 @@ export async function fetchMoviesByLanguage(
   decade: string = 'Latest',
   region: string = 'IN',
   sortBy: string = 'popularity.desc',
-  withGenre?: number
+  withGenre?: number,
+  providerIds: number[] = [119] // Default to Prime Video India
 ): Promise<Movie[]> {
   try {
     const languageCode = getLanguageCode(language);
     const { start_date, end_date } = getDateRangeForDecade(decade);
-    const providerId = PROVIDER_IDS[region as keyof typeof PROVIDER_IDS];
+    const providersString = providerIds.join('|');
 
     const response = await axios.get<TMDBResponse>(`${TMDB_BASE_URL}/discover/movie`, {
       params: {
         api_key: TMDB_API_KEY,
-        with_watch_providers: providerId,
+        with_watch_providers: providersString,
         watch_region: region,
         with_original_language: languageCode,
         'primary_release_date.gte': start_date,
@@ -79,9 +94,12 @@ export async function fetchMoviesByLanguage(
       })
     );
 
-    return moviesWithProviders.filter((movie) => movie.watch_providers?.flatrate?.some(
-      provider => provider.provider_id === providerId
-    ));
+    // Filter to ensure the movie is available on at least one of the selected providers
+    return moviesWithProviders.filter((movie) => 
+      movie.watch_providers?.flatrate?.some(
+        provider => providerIds.includes(provider.provider_id)
+      )
+    );
   } catch (error) {
     const errorMessage = error instanceof AxiosError 
       ? `API Error: ${error.message}`
@@ -148,4 +166,24 @@ function getLanguageCode(language: string): string {
     'Telugu': 'te'
   };
   return languageCodes[language] || 'en';
+}
+
+export function getDirectStreamingLink(title: string, providerId: number, region: string) {
+  const encodedTitle = encodeURIComponent(title);
+  
+  // Mapping of common provider search URLs
+  const searchUrls: Record<number, string> = {
+    8: `https://www.netflix.com/search?q=${encodedTitle}`, // Netflix
+    119: `https://www.primevideo.com/search/?phrase=${encodedTitle}`, // Prime Video IN
+    9: `https://www.amazon.com/s?k=${encodedTitle}+prime+video`, // Prime Video US
+    122: `https://www.hotstar.com/in/explore?search_query=${encodedTitle}`, // Disney+ Hotstar
+    337: `https://www.disneyplus.com/search?q=${encodedTitle}`, // Disney+ US
+    232: `https://www.zee5.com/search?q=${encodedTitle}`, // Zee5
+    220: `https://www.jiocinema.com/search/${encodedTitle}`, // JioCinema
+    15: `https://www.hulu.com/search?q=${encodedTitle}`, // Hulu
+    1899: `https://www.max.com/search/${encodedTitle}`, // Max
+    2: `https://tv.apple.com/search?term=${encodedTitle}`, // Apple TV
+  };
+
+  return searchUrls[providerId] || `https://www.google.com/search?q=${encodedTitle}+watch+online`;
 }

@@ -5,10 +5,11 @@ import { DecadeSelector } from '../components/DecadeSelector';
 import { RegionSelector } from '../components/RegionSelector';
 import { GenreSelector } from '../components/GenreSelector';
 import { SortSelector } from '../components/SortSelector';
+import { ProviderSelector } from '../components/ProviderSelector';
 import { SearchBar } from '../components/SearchBar';
 import { MovieCard } from '../components/MovieCard';
 import { SkeletonCard } from '../components/SkeletonCard';
-import { fetchMoviesByLanguage, searchMovies } from '../services/tmdb';
+import { fetchMoviesByLanguage, searchMovies, PROVIDERS } from '../services/tmdb';
 import type { Movie } from '../types/movie';
 
 function shuffleArray<T>(array: T[]): T[] {
@@ -24,6 +25,9 @@ export function Home() {
   const [selectedLanguage, setSelectedLanguage] = useState('English');
   const [selectedDecade, setSelectedDecade] = useState('Latest');
   const [selectedRegion, setSelectedRegion] = useState('IN');
+  const [selectedProviders, setSelectedProviders] = useState<number[]>(() => 
+    PROVIDERS['IN'].map(p => p.id)
+  );
   const [selectedGenre, setSelectedGenre] = useState<number | undefined>(undefined);
   const [selectedSort, setSelectedSort] = useState('popularity.desc');
   const [searchQuery, setSearchQuery] = useState('');
@@ -35,7 +39,19 @@ export function Home() {
   const [usedMovies, setUsedMovies] = useState<Set<number>>(new Set());
   const [isLoading, setIsLoading] = useState(false);
 
+  // Update providers when region changes
+  useEffect(() => {
+    const regionProviders = PROVIDERS[selectedRegion as keyof typeof PROVIDERS] || PROVIDERS['IN'];
+    setSelectedProviders(regionProviders.map(p => p.id));
+  }, [selectedRegion]);
+
   const loadMovies = useCallback(async () => {
+    if (selectedProviders.length === 0) {
+      setMovies([]);
+      setCurrentMovie(null);
+      return;
+    }
+
     setIsLoading(true);
     let fetchedMovies: Movie[] = [];
     
@@ -47,7 +63,8 @@ export function Home() {
         selectedDecade, 
         selectedRegion,
         selectedSort,
-        selectedGenre
+        selectedGenre,
+        selectedProviders
       );
     }
     
@@ -64,7 +81,7 @@ export function Home() {
     }
     
     setIsLoading(false);
-  }, [selectedLanguage, selectedDecade, selectedRegion, selectedGenre, selectedSort, searchQuery]);
+  }, [selectedLanguage, selectedDecade, selectedRegion, selectedGenre, selectedSort, searchQuery, selectedProviders]);
 
   useEffect(() => {
     loadMovies();
@@ -89,6 +106,12 @@ export function Home() {
       setCurrentMovie(nextMovie);
       setUsedMovies(new Set([...usedMovies, nextMovie.id]));
     }
+  };
+
+  const toggleProvider = (id: number) => {
+    setSelectedProviders(prev => 
+      prev.includes(id) ? prev.filter(p => p !== id) : [...prev, id]
+    );
   };
 
   return (
@@ -125,16 +148,27 @@ export function Home() {
                 <RegionSelector selectedRegion={selectedRegion} onRegionChange={setSelectedRegion} />
               </div>
               <div className="space-y-4">
-                <label className="text-xs font-black uppercase tracking-widest text-text-secondary">Language</label>
-                <LanguageSelector selectedLanguage={selectedLanguage} onLanguageChange={setSelectedLanguage} />
+                <label className="text-xs font-black uppercase tracking-widest text-text-secondary">Streaming Apps</label>
+                <ProviderSelector 
+                  selectedRegion={selectedRegion} 
+                  selectedProviders={selectedProviders} 
+                  onProviderToggle={toggleProvider} 
+                />
               </div>
             </div>
 
-            <div className="space-y-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
+              <div className="space-y-4">
+                <label className="text-xs font-black uppercase tracking-widest text-text-secondary">Language</label>
+                <LanguageSelector selectedLanguage={selectedLanguage} onLanguageChange={setSelectedLanguage} />
+              </div>
               <div className="space-y-4">
                 <label className="text-xs font-black uppercase tracking-widest text-text-secondary">Decade</label>
                 <DecadeSelector selectedDecade={selectedDecade} onDecadeChange={setSelectedDecade} />
               </div>
+            </div>
+
+            <div className="space-y-6">
               <div className="space-y-4">
                 <label className="text-xs font-black uppercase tracking-widest text-text-secondary">Genre</label>
                 <GenreSelector selectedGenre={selectedGenre} onGenreChange={setSelectedGenre} />
@@ -150,7 +184,7 @@ export function Home() {
         <div className="flex justify-center pt-4">
           <button
             onClick={handleShuffle}
-            disabled={isLoading || movies.length === 0}
+            disabled={isLoading || (movies.length === 0 && selectedProviders.length > 0)}
             className="chic-btn-primary px-12 py-5 text-xl flex items-center gap-3 animate-breath group"
           >
             <RefreshCw className={`w-6 h-6 group-hover:rotate-180 transition-transform duration-500 ${isLoading ? 'animate-spin' : ''}`} />
@@ -171,8 +205,9 @@ export function Home() {
         ) : (
           <div className="chic-glass rounded-[3rem] py-32 text-center border-dashed">
             <p className="text-xl md:text-2xl font-bold text-text-secondary">
-              The screen is dark. <br />
-              <span className="text-sm font-normal">Try adjusting your preferences to find a match.</span>
+              {selectedProviders.length === 0 
+                ? "Select at least one streaming app." 
+                : "The screen is dark. Try adjusting your preferences."}
             </p>
           </div>
         )}

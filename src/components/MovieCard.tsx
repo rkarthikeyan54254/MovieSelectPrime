@@ -1,6 +1,7 @@
 import React from 'react';
-import { ExternalLink, Star, Calendar, Globe, Info, Play } from 'lucide-react';
-import { Link } from 'react-router-dom';
+import { Star, Calendar, Info, Play } from 'lucide-react';
+import { Link, useLocation } from 'react-router-dom';
+import { getDirectStreamingLink, PROVIDERS } from '../services/tmdb';
 import type { Movie } from '../types/movie';
 
 interface MovieCardProps {
@@ -11,7 +12,22 @@ export function MovieCard({ movie }: MovieCardProps) {
   const posterUrl = `https://image.tmdb.org/t/p/original${movie.poster_path}`;
   const releaseYear = new Date(movie.release_date).getFullYear();
   const rating = Math.round(movie.vote_average * 10) / 10;
+  
+  // Find the primary provider for branding
+  const flatrate = movie.watch_providers?.flatrate || [];
+  const primaryProvider = flatrate[0];
+  
+  // Get region from URL or context (default to IN for search links if not easily available)
+  // In a real app, we might pass this down or use a store. 
+  // For now, we'll try to infer from common logic or default.
+  const region = 'IN'; 
 
+  const watchUrl = primaryProvider 
+    ? getDirectStreamingLink(movie.title, primaryProvider.provider_id, region)
+    : movie.watch_providers?.link;
+
+  const providerName = primaryProvider?.provider_name || 'Streaming';
+  
   return (
     <div className="relative group chic-glass rounded-[2.5rem] overflow-hidden shadow-2xl transition-all duration-700 hover:shadow-purple-500/10 border-0">
       <div className="flex flex-col lg:flex-row">
@@ -58,25 +74,36 @@ export function MovieCard({ movie }: MovieCardProps) {
             </Link>
 
             <a
-              href={movie.watch_providers?.link}
+              href={watchUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className="chic-btn-secondary px-10 py-5 text-lg flex items-center justify-center gap-3"
+              className="chic-btn-secondary px-10 py-5 text-lg flex items-center justify-center gap-3 border-2 border-transparent hover:border-white/20 transition-all"
+              style={{ 
+                backgroundColor: primaryProvider ? 'rgba(255, 255, 255, 0.05)' : undefined,
+                color: 'var(--text-primary)'
+              }}
             >
               <Play className="w-6 h-6 fill-current" />
-              Stream Now
+              Watch on {providerName}
             </a>
           </div>
 
-          <div className="pt-8 border-t border-glass-border flex items-center gap-6">
-            <div className="flex -space-x-3">
-              {[1, 2, 3].map((i) => (
-                <div key={i} className="w-8 h-8 rounded-full border-2 border-chic-gray bg-gray-800" />
+          <div className="pt-8 border-t border-glass-border flex flex-col gap-4">
+             <p className="text-xs font-black text-text-secondary uppercase tracking-[0.2em]">
+              Available on
+            </p>
+            <div className="flex flex-wrap gap-4">
+              {flatrate.map((provider) => (
+                <div key={provider.provider_id} className="flex items-center gap-2 group/icon">
+                  <img 
+                    src={`https://image.tmdb.org/t/p/original${provider.logo_path}`}
+                    alt={provider.provider_name}
+                    title={provider.provider_name}
+                    className="w-8 h-8 rounded-lg shadow-lg grayscale group-hover/icon:grayscale-0 transition-all duration-300"
+                  />
+                </div>
               ))}
             </div>
-            <p className="text-sm font-bold text-text-secondary uppercase tracking-widest">
-              Available on Prime Video
-            </p>
           </div>
         </div>
       </div>

@@ -4,7 +4,7 @@ import {
   ArrowLeft, Star, Calendar, Clock, 
   ExternalLink, Play, Users, Film, Info
 } from 'lucide-react';
-import { fetchMovieDetails } from '../services/tmdb';
+import { fetchMovieDetails, getDirectStreamingLink } from '../services/tmdb';
 import { VideoPlayer } from '../components/VideoPlayer';
 import type { Movie } from '../types/movie';
 
@@ -50,6 +50,9 @@ export function MovieDetail() {
 
   const backdropUrl = `https://image.tmdb.org/t/p/original${movie.backdrop_path}`;
   const posterUrl = `https://image.tmdb.org/t/p/original${movie.poster_path}`;
+
+  // Find the region (default to IN)
+  const region = 'IN'; 
 
   return (
     <div className="space-y-12 md:space-y-20 animate-fade-in pb-20">
@@ -100,30 +103,43 @@ export function MovieDetail() {
             </div>
 
             {movie.watch_providers && (
-              <div className="space-y-6 pt-8 border-t border-glass-border">
+              <div className="space-y-8 pt-8 border-t border-glass-border">
                 <h3 className="text-sm font-black uppercase tracking-widest text-text-secondary flex items-center gap-3">
                   <Play className="w-5 h-5" />
                   Streaming Hub
                 </h3>
-                <div className="flex flex-wrap gap-4">
-                  {movie.watch_providers.flatrate?.map(provider => (
-                    <img 
-                      key={provider.provider_id}
-                      src={`https://image.tmdb.org/t/p/original${provider.logo_path}`}
-                      alt={provider.provider_name}
-                      title={provider.provider_name}
-                      className="w-12 h-12 rounded-2xl shadow-xl grayscale hover:grayscale-0 transition-all duration-500"
-                    />
-                  ))}
+                <div className="space-y-4">
+                  {(movie.watch_providers.flatrate || []).map(provider => {
+                    const watchUrl = getDirectStreamingLink(movie.title, provider.provider_id, region);
+                    
+                    return (
+                      <div key={provider.provider_id} className="group/provider">
+                         <a 
+                          href={watchUrl}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="flex items-center justify-between p-4 rounded-2xl chic-glass hover:bg-white/5 transition-all group-hover/provider:scale-[1.02]"
+                        >
+                          <div className="flex items-center gap-3">
+                            <img 
+                              src={`https://image.tmdb.org/t/p/original${provider.logo_path}`}
+                              alt={provider.provider_name}
+                              className="w-10 h-10 rounded-xl"
+                            />
+                            <span className="font-black text-sm uppercase tracking-tighter">{provider.provider_name}</span>
+                          </div>
+                          <ExternalLink className="w-4 h-4 text-text-secondary opacity-0 group-hover/provider:opacity-100 transition-opacity" />
+                        </a>
+                      </div>
+                    );
+                  })}
+                  
+                  {!(movie.watch_providers.flatrate || []).length && (
+                    <p className="text-xs font-bold text-text-secondary uppercase italic">
+                      No direct stream available in this region.
+                    </p>
+                  )}
                 </div>
-                <a 
-                  href={movie.watch_providers.link}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="chic-btn-primary w-full flex justify-center items-center gap-3 text-sm py-4"
-                >
-                  Go Direct <ExternalLink className="w-4 h-4" />
-                </a>
               </div>
             )}
           </div>
