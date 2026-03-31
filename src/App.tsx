@@ -17,8 +17,10 @@ export default function App() {
       <div className="container mx-auto px-4 md:px-8 relative z-10">
         <nav className="flex justify-between items-center py-6 md:py-8">
           <div className="flex items-center gap-2">
-            <div className="w-8 h-8 bg-gradient-to-tr from-purple-600 to-blue-500 rounded-lg shadow-lg" />
-            <span className="text-xl font-black tracking-tighter">MSP</span>
+            <div className="w-8 h-8 bg-gradient-to-tr from-purple-600 to-blue-500 rounded-lg shadow-lg flex items-center justify-center">
+              <span className="text-white text-[10px] font-black tracking-tighter">FP</span>
+            </div>
+            <span className="text-xl font-black tracking-tighter uppercase">FlickPick</span>
           </div>
           <ThemeToggle />
         </nav>
@@ -33,7 +35,7 @@ export default function App() {
         <footer className="py-12 mt-20 border-t border-glass-border">
           <div className="flex flex-col md:flex-row justify-between items-center gap-6 text-text-secondary text-sm">
             <div className="flex items-center gap-4">
-              <span>© {new Date().getFullYear()} Movie Select Prime</span>
+              <span>© {new Date().getFullYear()} FlickPick™</span>
               <span className="w-1 h-1 bg-gray-600 rounded-full" />
               <span>Data by TMDB</span>
             </div>

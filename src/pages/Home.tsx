@@ -134,11 +134,10 @@ export function Home() {
       <header className="max-w-5xl mx-auto text-center space-y-8 md:space-y-12">
         <div className="space-y-4">
           <h1 className="text-5xl md:text-8xl font-black tracking-tighter leading-none">
-            PICK YOUR <br />
-            <span className="text-gradient-chic italic">CINEMA.</span>
+            FLICK<span className="text-gradient-chic italic">PICK.</span>
           </h1>
           <p className="text-lg md:text-xl text-text-secondary max-w-xl mx-auto font-medium">
-            (re)Discover high-fidelity cinema curated for your mood.
+            Curated cinema, delivered with a click.
           </p>
         </div>
 
