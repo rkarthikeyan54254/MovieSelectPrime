@@ -17,8 +17,8 @@ export default function App() {
       <div className="container mx-auto px-4 md:px-8 relative z-10">
         <nav className="flex justify-between items-center py-6 md:py-8">
           <div className="flex items-center gap-2">
-            <div className="w-8 h-8 bg-gradient-to-tr from-purple-600 to-blue-500 rounded-lg shadow-lg flex items-center justify-center">
-              <span className="text-white text-[10px] font-black tracking-tighter">FP</span>
+            <div className="w-8 h-8 rounded-lg shadow-lg overflow-hidden flex items-center justify-center bg-chic-gray">
+              <img src="/favicon.jpg" alt="FlickPick" className="w-full h-full object-cover" />
             </div>
             <span className="text-xl font-black tracking-tighter uppercase">FlickPick</span>
           </div>

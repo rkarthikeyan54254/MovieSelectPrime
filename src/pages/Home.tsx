@@ -131,8 +131,17 @@ export function Home() {
 
   return (
     <div className="space-y-12 md:space-y-20 animate-fade-in">
-      <header className="max-w-5xl mx-auto text-center space-y-8 md:space-y-12">
-        <div className="space-y-4">
+      <header className="max-w-5xl mx-auto text-center space-y-8 md:space-y-12 relative">
+        {/* Cinematic Hero Image */}
+        <div className="absolute top-[-100px] left-1/2 -translate-x-1/2 w-[120%] h-[500px] pointer-events-none opacity-50 -z-10">
+          <img 
+            src="/hero.png" 
+            alt="Cinematic Discovery" 
+            className="w-full h-full object-cover mask-radial"
+          />
+        </div>
+
+        <div className="space-y-4 pt-10">
           <h1 className="text-5xl md:text-8xl font-black tracking-tighter leading-none">
             FLICK<span className="text-gradient-chic italic">PICK.</span>
           </h1>
