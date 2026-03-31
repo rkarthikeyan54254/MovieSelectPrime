@@ -9,6 +9,7 @@ import { ProviderSelector } from '../components/ProviderSelector';
 import { SearchBar } from '../components/SearchBar';
 import { MovieCard } from '../components/MovieCard';
 import { SkeletonCard } from '../components/SkeletonCard';
+import { NoResults } from '../components/NoResults';
 import { fetchMoviesByLanguage, searchMovies, PROVIDERS } from '../services/tmdb';
 import type { Movie } from '../types/movie';
 
@@ -114,6 +115,20 @@ export function Home() {
     );
   };
 
+  const handleBroadenSearch = () => {
+    setSelectedDecade('Latest');
+    setSelectedGenre(undefined);
+  };
+
+  const handleUniversalShuffle = () => {
+    setSelectedLanguage('English');
+    setSelectedDecade('Latest');
+    setSelectedGenre(undefined);
+    const allProviders = PROVIDERS[selectedRegion as keyof typeof PROVIDERS].map(p => p.id);
+    setSelectedProviders(allProviders);
+    setSearchQuery('');
+  };
+
   return (
     <div className="space-y-12 md:space-y-20 animate-fade-in">
       <header className="max-w-5xl mx-auto text-center space-y-8 md:space-y-12">
@@ -203,13 +218,13 @@ export function Home() {
             <MovieCard movie={currentMovie} />
           </div>
         ) : (
-          <div className="chic-glass rounded-[3rem] py-32 text-center border-dashed">
-            <p className="text-xl md:text-2xl font-bold text-text-secondary">
-              {selectedProviders.length === 0 
-                ? "Select at least one streaming app." 
-                : "The screen is dark. Try adjusting your preferences."}
-            </p>
-          </div>
+          <NoResults 
+            selectedLanguage={selectedLanguage}
+            selectedDecade={selectedDecade}
+            hasProviders={selectedProviders.length > 0}
+            onBroadenSearch={handleBroadenSearch}
+            onUniversalShuffle={handleUniversalShuffle}
+          />
         )}
       </main>
     </div>
