@@ -6,6 +6,7 @@ import {
 } from 'lucide-react';
 import { fetchMovieDetails, getDirectStreamingLink } from '../services/tmdb';
 import { VideoPlayer } from '../components/VideoPlayer';
+import { SEO } from '../components/SEO';
 import type { Movie } from '../types/movie';
 
 export function MovieDetail() {
@@ -50,12 +51,39 @@ export function MovieDetail() {
 
   const backdropUrl = `https://image.tmdb.org/t/p/original${movie.backdrop_path}`;
   const posterUrl = `https://image.tmdb.org/t/p/original${movie.poster_path}`;
+  const releaseYear = new Date(movie.release_date).getFullYear();
+
+  // JSON-LD Movie Schema
+  const movieSchema = {
+    "@context": "https://schema.org",
+    "@type": "Movie",
+    "name": movie.title,
+    "image": posterUrl,
+    "description": movie.overview,
+    "datePublished": movie.release_date,
+    "aggregateRating": {
+      "@type": "AggregateRating",
+      "ratingValue": movie.vote_average,
+      "bestRating": "10",
+      "ratingCount": movie.vote_count
+    },
+    "genre": movie.genres?.map(g => g.name)
+  };
 
   // Find the region (default to IN)
   const region = 'IN'; 
 
   return (
     <div className="space-y-12 md:space-y-20 animate-fade-in pb-20">
+      <SEO 
+        title={`Watch ${movie.title} (${releaseYear})`}
+        description={`FlickPick: Watch ${movie.title} trailer, view cast details, and find where to stream it on Netflix, Prime Video, or Zee5.`}
+        image={backdropUrl}
+        url={`https://movieselectprime.netlify.app/movie/${movie.id}`}
+        type="video.movie"
+        schemaData={movieSchema}
+      />
+
       <Link to="/" className="chic-btn-secondary inline-flex items-center gap-3">
         <ArrowLeft className="w-5 h-5" />
         Back to Exhibit
@@ -159,7 +187,7 @@ export function MovieDetail() {
             <div className="flex flex-wrap items-center gap-6 text-text-secondary font-bold">
               <span className="flex items-center gap-2 uppercase tracking-tighter">
                 <Calendar className="w-5 h-5" />
-                {new Date(movie.release_date).getFullYear()}
+                {releaseYear}
               </span>
               <span className="flex items-center gap-2 uppercase tracking-tighter">
                 <Clock className="w-5 h-5" />

@@ -10,6 +10,7 @@ import { SearchBar } from '../components/SearchBar';
 import { MovieCard } from '../components/MovieCard';
 import { SkeletonCard } from '../components/SkeletonCard';
 import { NoResults } from '../components/NoResults';
+import { SEO } from '../components/SEO';
 import { fetchMoviesByLanguage, searchMovies, PROVIDERS } from '../services/tmdb';
 import type { Movie } from '../types/movie';
 
@@ -129,8 +130,22 @@ export function Home() {
     setSearchQuery('');
   };
 
+  const homeSchema = {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    "name": "FlickPick",
+    "url": "https://movieselectprime.netlify.app/",
+    "potentialAction": {
+      "@type": "SearchAction",
+      "target": "https://movieselectprime.netlify.app/?q={search_term_string}",
+      "query-input": "required name=search_term_string"
+    }
+  };
+
   return (
     <div className="space-y-12 md:space-y-20 animate-fade-in">
+      <SEO schemaData={homeSchema} />
+      
       <header className="max-w-5xl mx-auto text-center space-y-8 md:space-y-12 relative">
         {/* Cinematic Hero Image */}
         <div className="absolute top-[-100px] left-1/2 -translate-x-1/2 w-[120%] h-[500px] pointer-events-none opacity-50 -z-10">
@@ -235,6 +250,13 @@ export function Home() {
           />
         )}
       </main>
+
+      {/* Hidden SEO Text for discovery */}
+      <section className="sr-only">
+        <h2>Watch Movies on Netflix, Amazon Prime Video, and Zee5</h2>
+        <p>Discover the best movies from the 70s, 80s, 90s, 2K, and latest releases in English, Tamil, Hindi, and Telugu.</p>
+        <p>FlickPick is your universal movie discovery tool for premium cinematic curation.</p>
+      </section>
     </div>
   );
 }
